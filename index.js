@@ -27,16 +27,48 @@ app.get("/", (req, res) => {
 
 //register를 위한 routing
 app.post("/api/users/register", (req, res) => {
-    const user = new User(req.boidy); //위에서 import한 {User} 몽고디비에 BodyPaser를 이용한 req.body를 전송
+    const user = new User(req.body); //위에서 import한 {User} 몽고디비에 BodyPaser를 이용한 req.body를 전송
+
+    //아래 save 실행되기전에 pre("save")를 user에 정의해놓았음(패스워드 암호화)
     user.save((err, doc) => { //mongodbd에 저장 후 err와 userData 리턴 받음
-        if(err) return res.json ({ success: false, err}) //에러 있으면
-        res.status(200).json({
+        if(err) {
+            return res.json ({ success: false, err}) //에러 있으면   
+        }
+        return res.status(200).json({
             success: true,
             userData: doc
         });
     }); 
 })
 
+
+app.post("/api/users/login", (req, res) => {
+    //요청 된 이메일을 데이터베이스에서 확인
+    User.findOne({ email: req.body.email }, (err, user) => {
+        if(!user) {
+            return res.json({
+                loginSuccess: false,
+                message: "해당 하는 유저는 등록되어 있지 않습니다."
+            })
+        }
+
+        //요청 된 이메일의 비밀번호가 일치하는지 확인
+        user.comparePassword(req.body.password, (err, isMatch) => {
+            if(!isMatch) return res.json({ loginSucess: false, message: "wrong password!"});
+
+
+            //비밀번호가 일치한다면 유저를 위한 토큰 생성
+            user.generateToken((err, user) => {
+                if(err) return res.status(400).send(err);
+
+                //token을 저장한다. 어디에? 쿠키, 로컬스토리지 등
+                res.cookie("x_auth", user.token)
+                .status(200)
+                .json({ loginSuccess: true, userId: user._id });
+            });
+        })
+    })
+})
 
 
 // node standard port = 5000
