@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const config = require('./config/key'); //config 폴더 추가후 사용
+const { auth } = require("./middle.auth");
 
 //mongodb의 데이터와 api register비교를 위해
 const { User } = require('./models/user');
@@ -68,6 +69,23 @@ app.post("/api/users/login", (req, res) => {
             });
         })
     })
+})
+
+//auth function 
+
+app.get('/api/users/auth', auth, (req, res) => { //middleware auth추가 route를 타면 callback을 싱해하기전에 auth middleware를 먼저 실행함
+    //여기 들어왔단 말은 middleware를 통과 했다는 뜻 -> Authentication이 true라는 뜻
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true,
+        email: req.user.email,
+        name: req.user.name,
+        lastname: req.user.lastname,
+        role: req.user.role,
+        image: req.user.image
+    })
+
 })
 
 

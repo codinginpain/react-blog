@@ -76,6 +76,23 @@ userSchema.methods.generateToken = function(cb) {
     })
 }
 
+//토큰 가져오기
+userSchema.statics.findByToken = function(toekn, cb) {
+    var suer = this;
+
+    //token을 decode한다.
+    jwt.verify(token, 'secretToken', function(err, decoded) {
+        //decoded에 userId가 나옴 -> 토큰 생성시 userId+"secretToken"을 사용했으므로 "secretToken"을 던지면 decoded된 userId를 반환함
+
+        //userId를 이용해서 유저를 찾은다음
+        //클라이언트에서 가져온 token과 DB에 보관 된 token이 일치하는지 확인 
+        user.findOne({"_id": decoded, "token": token}, function(err, user) {
+            if(err) return cb(err);
+            cb(null, user);
+        })
+    }) 
+}
+
 //schema 작성후 모델 자체를 만들기위해 mongoose.model 사용
 //param은 name of collection(User), scheam(User에 저장 될 userSchema)
 const User = mongoose.model('User', userSchema);
