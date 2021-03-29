@@ -8,10 +8,10 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
 const config = require('./config/key'); //config 폴더 추가후 사용
-const { auth } = require("./middle.auth");
+const { auth } = require("./middleware/auth");
 
 //mongodb의 데이터와 api register비교를 위해
-const { User } = require('./models/user');
+const { User } = require('./models/User');
 
 mongoose.connect(config.mongoURI,
     {useNewUrlParser: true}).then(() => console.log('mongoDB connected'))
@@ -86,6 +86,13 @@ app.get('/api/users/auth', auth, (req, res) => { //middleware auth추가 route�
         image: req.user.image
     })
 
+})
+
+app.get('/api/users/logout', auth, (req, res) => {
+    User.findOneAndUpdate({ _id: req.user.id}, {toekn: ""}, (err, user) => {
+        if(err) return res.json({sucess: false, err});
+        return res.status(200).send({sucess: true});
+    })
 })
 
 

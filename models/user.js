@@ -26,6 +26,7 @@ const userSchema = mongoose.Schema({
         type: Number,
         default: 0 //0 normal user
     },
+    image: String,
     token: {
         type: String,
     },
@@ -78,7 +79,7 @@ userSchema.methods.generateToken = function(cb) {
 
 //토큰 가져오기
 userSchema.statics.findByToken = function(toekn, cb) {
-    var suer = this;
+    var user = this;
 
     //token을 decode한다.
     jwt.verify(token, 'secretToken', function(err, decoded) {
