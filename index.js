@@ -89,7 +89,7 @@ app.get('/api/users/auth', auth, (req, res) => { //middleware auth추가 route�
 })
 
 app.get('/api/users/logout', auth, (req, res) => {
-    User.findOneAndUpdate({ _id: req.user.id}, {toekn: ""}, (err, user) => {
+    User.findOneAndUpdate({ _id: req.user.id}, {token: ""}, (err, user) => {
         if(err) return res.json({sucess: false, err});
         return res.status(200).send({sucess: true});
     })

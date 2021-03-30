@@ -78,7 +78,7 @@ userSchema.methods.generateToken = function(cb) {
 }
 
 //토큰 가져오기
-userSchema.statics.findByToken = function(toekn, cb) {
+userSchema.statics.findByToken = function(token, cb) {
     var user = this;
 
     //token을 decode한다.
