@@ -7,11 +7,11 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
-const config = require('./server/config/key'); //config 폴더 추가후 사용
-const { auth } = require("./server/middleware/auth");
+const config = require('./config/key'); //config 폴더 추가후 사용
+const { auth } = require("./middleware/auth");
 
 //mongodb의 데이터와 api register비교를 위해
-const { User } = require('./server/models/User');
+const { User } = require('./models/User');
 
 mongoose.connect(config.mongoURI,
     {useNewUrlParser: true}).then(() => console.log('mongoDB connected'))
@@ -24,6 +24,10 @@ app.use(cookieParser()); // cookie
 
 app.get("/", (req, res) => {
     res.json({"hello~" : "Hi World!!!"});
+});
+
+app.get('/api/hello', (req, res) => {
+    res.send("반갑습니다 axios 응답");
 })
 
 //register를 위한 routing
