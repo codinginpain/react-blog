@@ -1,6 +1,8 @@
 import React from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
+
+import "./LandingPage.css"
 function LandingPage() {
 
   useEffect(() => {
@@ -8,8 +10,8 @@ function LandingPage() {
     .then(response => console.log(response.data))
   }, [])
   return (
-    <div>
-      LandingPage 랜딩페이지
+    <div className='landingContainer'>
+      <h2>시작 페이지</h2>
     </div>
   );
 }
