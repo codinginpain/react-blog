@@ -5,17 +5,32 @@ import "./LoginPage.css";
 function LoginPage() {
 
   const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
+  const [Password, setPassword] = useState("");   
 
+  const onEmailHandler = (event) => {
+    setEmail(event.currentTarget.value);
+  }
+
+  const onPasswordHandler = (event) => {
+    setPassword(event.currentTarget.value);
+  }
+
+  const onSubmitHandler = (event) => {
+    event.preventDefault(); //이걸 작성하지않으면 page가 무조건 refresh가 일어남
+
+    // console.log('Email', Email);
+    // console.log('Password', Password);
+  }
+  
   return (
     <div className="loginContainer">
-      <form className="loginForm">
+      <form className="loginForm" onSubmit={onSubmitHandler}>
         <label>Email</label>
-        <input type="email" Email onChange />
+        <input type="email" value={Email} onChange={onEmailHandler} />
         <label>Password</label>
-        <input type="password" Password onChange />
+        <input type="password" value={Password} onChange={onPasswordHandler} />
         <br />
-        <button>
+        <button type="submit">
           Login
         </button>
 
