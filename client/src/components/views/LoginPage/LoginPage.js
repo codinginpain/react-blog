@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { loginUser } from '../../../_actions/user_action';
+import { loginUser } from '../../../_actions/user_actions';
 
 import "./LoginPage.css";
 
-function LoginPage() {
+function LoginPage(props) {
   const dispatch = useDispatch();
 
   const [Email, setEmail] = useState("");
@@ -31,7 +31,15 @@ function LoginPage() {
       password: Password,
     }
 
+    //redux를 안쓰면 여기서 바로 axios해서 보내면 되는데 redux를 위해 여기서 dispatch를 활용
     dispatch(loginUser(body))
+      .then(response => {
+        if(response.payload.loginSuccess) {
+          props.history.push('/');
+        }else {
+          alert('error');
+        }
+      })
 
   }
   
@@ -46,8 +54,6 @@ function LoginPage() {
         <button type="submit">
           Login
         </button>
-
-
       </form>
     </div>
   );
