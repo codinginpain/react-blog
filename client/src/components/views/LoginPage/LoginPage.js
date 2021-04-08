@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../_actions/user_actions';
 
@@ -35,7 +34,7 @@ function LoginPage(props) {
     dispatch(loginUser(body))
       .then(response => {
         if(response.payload.loginSuccess) {
-          props.history.push('/');
+          props.history.push('/'); //react에서 page를 이동시킬때는 props.history를 이용함
         }else {
           alert('error');
         }
